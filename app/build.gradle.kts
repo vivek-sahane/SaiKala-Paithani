@@ -60,6 +60,9 @@ dependencies {
     implementation ("org.imaginativeworld.whynotimagecarousel:whynotimagecarousel:2.1.0")
     /* For Slider - End */
 
+    implementation ("com.android.volley:volley:1.2.1")
+    implementation ("com.github.hishd:TinyCart:1.0.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
