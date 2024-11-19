@@ -27,6 +27,8 @@ import com.hishd.tinycart.util.TinyCartHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
 public class ProductDetailActivity extends AppCompatActivity {
 
 
@@ -40,7 +42,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         String name = getIntent().getStringExtra("name");
-        String image = getIntent().getStringExtra("Image");
+        String image = getIntent().getStringExtra("image");
         int id = getIntent().getIntExtra("id",0);
         double price = getIntent().getDoubleExtra("price",0);
 
@@ -56,15 +58,16 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         Cart cart = TinyCartHelper.getCart();
 
+
         binding.addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cart.addItem(currentProduct,1);
+                binding.addToCartBtn.setEnabled(false);
+                binding.addToCartBtn.setText("Added in cart");
             }
         });
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,7 +86,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     void getProductDetails(int id) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = Constants.GET_PRODUCT_DETAILS_URL + id ;
+        String url = Constants.GET_PRODUCT_DETAILS_URL + id;
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -97,7 +100,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                                 Html.fromHtml(description)
                         );
 
-                        currentProduct = Product product = new Product(
+                        currentProduct = new Product(
                                 product.getString("name"),
                                 Constants.PRODUCTS_IMAGE_URL + product.getString("image"),
                                 product.getString("status"),
@@ -105,11 +108,11 @@ public class ProductDetailActivity extends AppCompatActivity {
                                 product.getDouble("price_discount"),
                                 product.getInt("stock"),
                                 product.getInt("id")
-
                         );
+
                     }
                 } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
@@ -118,6 +121,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
             }
         });
+
         queue.add(request);
     }
 
