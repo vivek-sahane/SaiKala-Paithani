@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-/*
+
         binding.searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-*/
+
         initCategories();
         initProducts();
         initSlider();
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         products = new ArrayList<>();
         productAdapter = new ProductAdapter(this, products);
 
-        // getRecentProducts();
+        getRecentProducts();
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         binding.productList.setLayoutManager(layoutManager);

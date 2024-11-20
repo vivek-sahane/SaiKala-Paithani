@@ -158,7 +158,18 @@ public class CheckoutActivity extends AppCompatActivity {
                     if (response.getString("status").equals("success")) {
                         Toast.makeText(CheckoutActivity.this, "Success order.", Toast.LENGTH_SHORT).show();
                         String orderNumber = response.getJSONObject("data").getString("code");
-
+                        new AlertDialog.Builder(CheckoutActivity.this)
+                                .setTitle("Order Successful")
+                                .setCancelable(false)
+                                .setMessage("Your order number is: " + orderNumber)
+                                .setPositiveButton("Pay Now", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(CheckoutActivity.this, PaymentActivity.class);
+                                        intent.putExtra("orderCode", orderNumber);
+                                        startActivity(intent);
+                                    }
+                                }).show();
                     } else {
                         new AlertDialog.Builder(CheckoutActivity.this)
                                 .setTitle("Order Failed")

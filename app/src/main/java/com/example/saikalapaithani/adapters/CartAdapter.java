@@ -120,9 +120,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     @Override
                     public void onClick(View view) {
                         dialog.dismiss();
-//                        notifyDataSetChanged();
-//                        cart.updateItem(product, product.getQuantity());
-//                        cartListner.onQuantityChanged();
+                        notifyDataSetChanged();
+                        cart.updateItem(product, product.getQuantity());
+                        cartListner.onQuantityChanged();
                     }
                 });
 

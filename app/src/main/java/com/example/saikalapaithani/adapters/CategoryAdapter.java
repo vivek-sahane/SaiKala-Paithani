@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.saikalapaithani.R;
+import com.example.saikalapaithani.activities.CategoryActivity;
 import com.example.saikalapaithani.databinding.ItemCategoriesBinding;
 import com.example.saikalapaithani.model.Category;
 
@@ -44,7 +45,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         holder.binding.image.setBackgroundColor(Color.parseColor(category.getColor()));
 
-        /*
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,8 +56,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             }
         });
 
-
-         */
     }
 
     @Override
