@@ -7,7 +7,7 @@
       </SelectionState>
       <SelectionState runConfigName="MainActivity">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-20T15:31:13.223552700Z">
+        <DropdownSelection timestamp="2024-11-20T17:28:47.919060200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\vivek\.android\avd\Pixel_Fold_API_TiramisuPrivacySandbox.avd" />
