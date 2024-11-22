@@ -3,6 +3,7 @@ package com.example.saikalapaithani.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     CategoryAdapter categoryAdapter;
     ArrayList<Category> categories;
 
-
     ProductAdapter productAdapter;
     ArrayList<Product> products;
 
@@ -48,9 +48,8 @@ public class MainActivity extends AppCompatActivity {
         binding.searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
-
+                // Optional: Handle search state changes
             }
-
 
             @Override
             public void onSearchConfirmed(CharSequence text) {
@@ -61,7 +60,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onButtonClicked(int buttonCode) {
+                // Optional: Handle button clicks in the search bar
+            }
+        });
 
+        // Add onClickListener for the Feedback button
+        binding.feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start FeedbackActivity when Feedback button is clicked
+                Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -96,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject mainObj = new JSONObject(response);
                     if(mainObj.getString("status").equals("success")) {
                         JSONArray categoriesArray = mainObj.getJSONArray("categories");
-                        for(int i =0; i< categoriesArray.length(); i++) {
+                        for(int i = 0; i < categoriesArray.length(); i++) {
                             JSONObject object = categoriesArray.getJSONObject(i);
                             Category category = new Category(
                                     object.getString("name"),
@@ -109,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         categoryAdapter.notifyDataSetChanged();
                     } else {
-                        // DO nothing
+                        // Do nothing
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -118,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                // Handle error
             }
         });
 
@@ -132,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
             try {
                 JSONObject object = new JSONObject(response);
-                if(object.getString("status").equals("success")){
+                if(object.getString("status").equals("success")) {
                     JSONArray productsArray = object.getJSONArray("products");
-                    for(int i =0; i< productsArray.length(); i++) {
+                    for(int i = 0; i < productsArray.length(); i++) {
                         JSONObject childObj = productsArray.getJSONObject(i);
                         Product product = new Product(
                                 childObj.getString("name"),
@@ -144,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                                 childObj.getDouble("price_discount"),
                                 childObj.getInt("stock"),
                                 childObj.getInt("id")
-
                         );
                         products.add(product);
                     }
@@ -153,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }, error -> { });
+        }, error -> {});
 
         queue.add(request);
     }
@@ -166,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject object = new JSONObject(response);
                 if(object.getString("status").equals("success")) {
                     JSONArray offerArray = object.getJSONArray("news_infos");
-                    for(int i =0; i < offerArray.length(); i++) {
-                        JSONObject childObj =  offerArray.getJSONObject(i);
+                    for(int i = 0; i < offerArray.length(); i++) {
+                        JSONObject childObj = offerArray.getJSONObject(i);
                         binding.carousel.addData(
                                 new CarouselItem(
                                         Constants.NEWS_IMAGE_URL + childObj.getString("image"),
@@ -180,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }, error -> {});
+
         queue.add(request);
     }
 
@@ -193,5 +202,4 @@ public class MainActivity extends AppCompatActivity {
         binding.productList.setLayoutManager(layoutManager);
         binding.productList.setAdapter(productAdapter);
     }
-
 }
