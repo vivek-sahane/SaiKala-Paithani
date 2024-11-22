@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "349738644745",
+    "project_id": "saikala-paithanii",
+    "storage_bucket": "saikala-paithanii.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349738644745:android:d36a620ffe9762b4c1cfd8",
+        "android_client_info": {
+          "package_name": "com.example.saikalapaithani"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZWr8QxyKS7XLJJHv2s8yBtqJlLEGAZQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

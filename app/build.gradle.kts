@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -44,6 +45,7 @@ dependencies {
 
     /* For Loading images from internet - Start */
     implementation ("com.github.bumptech.glide:glide:4.13.0")
+    implementation(libs.firebase.database)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.13.0")
     /* For Slider - End */
 
