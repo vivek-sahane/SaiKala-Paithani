@@ -92,8 +92,9 @@
                 android:gravity="center_horizontal"
                 android:padding="10dp">
 
+
                 <Button
-                    android:id="@+id/location"
+                    android:id="@+id/buttonOpenMap"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginEnd="8dp"

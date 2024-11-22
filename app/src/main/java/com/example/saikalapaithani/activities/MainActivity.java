@@ -1,9 +1,12 @@
 package com.example.saikalapaithani.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.saikalapaithani.MapActivity;
 import com.example.saikalapaithani.R;
 import com.example.saikalapaithani.adapters.CategoryAdapter;
 import com.example.saikalapaithani.adapters.ProductAdapter;
@@ -65,18 +69,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Add onClickListener for the Feedback button
-        binding.feedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start FeedbackActivity when Feedback button is clicked
-                Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
-                startActivity(intent);
-            }
+        binding.feedback.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
+            startActivity(intent);
         });
+
+        // Add onClickListener for the Location button
+        binding.buttonOpenMap.setOnClickListener(v -> openMap());
 
         initCategories();
         initProducts();
         initSlider();
+    }
+
+    private void openMap() {
+        double latitude = 20.012803128867848;
+        double longitude = 74.49310115933933;
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Check if Google Maps is installed
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            // If Google Maps is not installed, show a Toast or redirect to the Play Store
+            Toast.makeText(MainActivity.this, "Google Maps is not installed. Redirecting to Play Store...", Toast.LENGTH_LONG).show();
+            Uri playStoreUri = Uri.parse("market://details?id=com.google.android.apps.maps");
+            Intent playStoreIntent = new Intent(Intent.ACTION_VIEW, playStoreUri);
+            startActivity(playStoreIntent);
+        }
     }
 
     private void initSlider() {
@@ -86,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
     void initCategories() {
         categories = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(this, categories);
-
         getCategories();
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
@@ -97,38 +118,29 @@ public class MainActivity extends AppCompatActivity {
     void getCategories() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        StringRequest request = new StringRequest(Request.Method.GET, Constants.GET_CATEGORIES_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Log.e("err", response);
-                    JSONObject mainObj = new JSONObject(response);
-                    if(mainObj.getString("status").equals("success")) {
-                        JSONArray categoriesArray = mainObj.getJSONArray("categories");
-                        for(int i = 0; i < categoriesArray.length(); i++) {
-                            JSONObject object = categoriesArray.getJSONObject(i);
-                            Category category = new Category(
-                                    object.getString("name"),
-                                    Constants.CATEGORIES_IMAGE_URL + object.getString("icon"),
-                                    object.getString("color"),
-                                    object.getString("brief"),
-                                    object.getInt("id")
-                            );
-                            categories.add(category);
-                        }
-                        categoryAdapter.notifyDataSetChanged();
-                    } else {
-                        // Do nothing
+        StringRequest request = new StringRequest(Request.Method.GET, Constants.GET_CATEGORIES_URL, response -> {
+            try {
+                JSONObject mainObj = new JSONObject(response);
+                if (mainObj.getString("status").equals("success")) {
+                    JSONArray categoriesArray = mainObj.getJSONArray("categories");
+                    for (int i = 0; i < categoriesArray.length(); i++) {
+                        JSONObject object = categoriesArray.getJSONObject(i);
+                        Category category = new Category(
+                                object.getString("name"),
+                                Constants.CATEGORIES_IMAGE_URL + object.getString("icon"),
+                                object.getString("color"),
+                                object.getString("brief"),
+                                object.getInt("id")
+                        );
+                        categories.add(category);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    categoryAdapter.notifyDataSetChanged();
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Handle error
-            }
+        }, error -> {
+            // Handle network error
         });
 
         queue.add(request);
@@ -141,9 +153,9 @@ public class MainActivity extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
             try {
                 JSONObject object = new JSONObject(response);
-                if(object.getString("status").equals("success")) {
+                if (object.getString("status").equals("success")) {
                     JSONArray productsArray = object.getJSONArray("products");
-                    for(int i = 0; i < productsArray.length(); i++) {
+                    for (int i = 0; i < productsArray.length(); i++) {
                         JSONObject childObj = productsArray.getJSONObject(i);
                         Product product = new Product(
                                 childObj.getString("name"),
@@ -161,7 +173,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }, error -> {});
+        }, error -> {
+            // Handle network error
+        });
 
         queue.add(request);
     }
@@ -172,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.GET, Constants.GET_OFFERS_URL, response -> {
             try {
                 JSONObject object = new JSONObject(response);
-                if(object.getString("status").equals("success")) {
+                if (object.getString("status").equals("success")) {
                     JSONArray offerArray = object.getJSONArray("news_infos");
-                    for(int i = 0; i < offerArray.length(); i++) {
+                    for (int i = 0; i < offerArray.length(); i++) {
                         JSONObject childObj = offerArray.getJSONObject(i);
                         binding.carousel.addData(
                                 new CarouselItem(
@@ -187,7 +201,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }, error -> {});
+        }, error -> {
+            // Handle network error
+        });
 
         queue.add(request);
     }
@@ -195,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
     void initProducts() {
         products = new ArrayList<>();
         productAdapter = new ProductAdapter(this, products);
-
         getRecentProducts();
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
